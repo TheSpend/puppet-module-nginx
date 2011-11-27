@@ -1,21 +1,21 @@
-<% if aliases.any? %>
+<% if aliases.any? -%>
 server {
   listen 80;
   server_name<% aliases.each do |a| %> <%= a %><% end %>;
   rewrite ^ http://<%= domain %>$request_uri? permanent;
 }
-<% end %>
+<% end -%>
 
-<% if upstreams.any? %>
+<% if upstreams.any? -%>
 upstream <%= name %> {
-  <% upstreams.each do |upstream| %>
+  <% upstreams.each do |upstream| -%>
   server <%= upstream %> fail_timeout=0;
-  <% end %>
+  <% end -%>
 }
-<% end %>
+<% end -%>
 
 server {
-  <% if default_vhost %>listen 80 default deferred;<% end %>
+  <% if default_vhost -%>listen 80 default deferred;<% end -%>
   client_max_body_size 4G;
   server_name <%= domain %>;
 
@@ -25,7 +25,7 @@ server {
 
   keepalive_timeout 5;
 
-  <% if mediaroot.any? %>
+  <% if mediaroot.any? -%>
   location = /favicon.ico {
     alias <%= absolute_mediaroot %>/favicon.ico;
     access_log off;
@@ -36,22 +36,22 @@ server {
     expires max;
     access_log off;
   }
-  <% end %>
+  <% end -%>
 
   location / {
 
-    <% if upstreams.any? %>
+    <% if upstreams.any? -%>
     try_files $uri @<%= name %>;
-    <% else %>
+    <% else -%>
     index  index.html;
-    <% end %>
+    <% end -%>
 
-    <% if rewrite_missing_html_extension %>
+    <% if rewrite_missing_html_extension -%>
     try_files $uri $uri/ $uri.html =404;
-    <% end %>
+    <% end -%>
   }
 
-  <% if upstreams.any? %>
+  <% if upstreams.any? -%>
   location @<%= name %> {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
@@ -59,5 +59,5 @@ server {
 
     proxy_pass http://<%= name %>;
   }
-  <% end %>
+  <% end -%>
 }
