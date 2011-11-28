@@ -24,6 +24,12 @@ class nginx($workers=1, $ensure=present) {
     "/etc/nginx/sites-enabled/default":
       ensure => absent,
       require => File["/etc/nginx/nginx.conf"];
+
+    "/etc/nginx/passwords":
+      ensure => $ensure ? {
+        "absent" => absent,
+        default  => directory,
+      }
   }
 
   service { nginx:

@@ -36,6 +36,10 @@ server {
 <% end -%>
 
   location / {
+<% if auth_basic -%>
+    auth_basic            "Restricted";
+    auth_basic_user_file  <%= auth_basic_user_file %>;
+<% end -%>
 <% if upstreams.any? -%>
     try_files $uri @<%= name %>;
 <% else -%>

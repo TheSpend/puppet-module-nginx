@@ -8,8 +8,9 @@ define nginx::site($domain,
                    $default_vhost=false,
                    $rewrite_missing_html_extension=false,
                    $upstreams=[],
+                   $auth_basic=false,
+                   $auth_basic_content="",
                    $aliases=[]) {
-
   $absolute_mediaroot = inline_template("<%= File.expand_path(mediaroot, root) %>")
 
   if $ensure == 'present' {
@@ -43,6 +44,18 @@ define nginx::site($domain,
     }
   }
 
+  if $auth_basic == true {
+    $auth_basic_user_file = "/etc/nginx/passwords/${title}"
+
+    file { $auth_basic_user_file:
+      content => $auth_basic_content,
+      ensure  => $ensure,
+      owner   => $owner,
+      group   => $group,
+      require => File["/etc/nginx/passwords"],
+    }
+  }
+
   file {
     "/etc/nginx/sites-available/${name}.conf":
       ensure => $ensure,
@@ -63,4 +76,5 @@ define nginx::site($domain,
       require => File["/etc/nginx/sites-available/${name}.conf"],
       notify => Service[nginx];
   }
+
 }
