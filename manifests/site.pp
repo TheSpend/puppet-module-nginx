@@ -10,7 +10,7 @@ define nginx::site($domain,
                    $upstreams=[],
                    $auth_basic=false,
                    $auth_basic_content="",
-                   $root_parent_check=true,
+                   $directory_check=true,
                    $aliases=[]) {
   $absolute_mediaroot = inline_template("<%= File.expand_path(mediaroot, root) %>")
 
@@ -18,7 +18,7 @@ define nginx::site($domain,
     # Parent directory of root directory. /var/www for /var/www/blog
     $root_parent = inline_template("<%= root.match(%r!(.+)/.+!)[1] %>")
 
-    if $root_parent_check == true {
+    if $directory_check == true {
       if !defined(File[$root_parent]) {
         file { $root_parent:
           ensure => directory,
@@ -26,13 +26,12 @@ define nginx::site($domain,
           group => $group,
         }
       }
-    }
-
-    file { $root:
-      ensure => directory,
-      owner => $owner,
-      group => $group,
-      require => File[$root_parent],
+      file { $root:
+        ensure => directory,
+        owner => $owner,
+        group => $group,
+        require => File[$root_parent],
+      }
     }
 
   } elsif $ensure == 'absent' {
@@ -63,8 +62,10 @@ define nginx::site($domain,
     "/etc/nginx/sites-available/${name}.conf":
       ensure => $ensure,
       content => template("nginx/site.conf.erb"),
-      require => [File[$root],
-                  Package[nginx]],
+      require => $directory_check ? {
+        true  => [File[$root],Package[nginx]],
+        false => Package[nginx],
+      },
       notify => Service[nginx];
 
     "/etc/nginx/sites-enabled/${name}.conf":
