@@ -10,6 +10,7 @@ define nginx::site($domain,
                    $upstreams=[],
                    $auth_basic=false,
                    $auth_basic_content="",
+                   $root_parent_check=true,
                    $aliases=[]) {
   $absolute_mediaroot = inline_template("<%= File.expand_path(mediaroot, root) %>")
 
@@ -17,11 +18,13 @@ define nginx::site($domain,
     # Parent directory of root directory. /var/www for /var/www/blog
     $root_parent = inline_template("<%= root.match(%r!(.+)/.+!)[1] %>")
 
-    if !defined(File[$root_parent]) {
-      file { $root_parent:
-        ensure => directory,
-        owner => $owner,
-        group => $group,
+    if $root_parent_check == true {
+      if !defined(File[$root_parent]) {
+        file { $root_parent:
+          ensure => directory,
+          owner => $owner,
+          group => $group,
+        }
       }
     }
 
