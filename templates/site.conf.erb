@@ -74,6 +74,9 @@ server {
 
 <% unless upstreams.empty? -%>
   location @<%= name %> {
+<% if ssl -%>
+    proxy_set_header X-Forwarded-Proto https;
+<% end -%>
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_redirect off;
