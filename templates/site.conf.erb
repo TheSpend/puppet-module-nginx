@@ -20,6 +20,7 @@ upstream <%= name %> {
   server <%= upstream %> fail_timeout=0;
 <% end -%>
 }
+<% end -%>
 
 server {
   listen <% if ssl %>443<% else %>80<% end %><% if default_vhost %> default deferred<% end %>;
