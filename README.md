@@ -100,3 +100,22 @@ virtual host's root directory:
       owner => "www-mgr",
       group => "www-mgr",
     }
+
+Enable SSL by using the `ssl` argument and providing the location of a
+certificate and key. This will also redirect all HTTP requests to HTTPS:
+
+    nginx::site { "home":
+      domain => "uggedal.com",
+      root => "/var/www/home",
+      ssl => true,
+      ssl_certificate => "/etc/nginx/cert/uggedal.com.pem",
+      ssl_certificate_key => "/etc/nginx/cert/uggedal.com.key",
+    }
+
+    file {
+      "/etc/nginx/cert/uggedal.com.pem":
+        content => "...";
+      "/etc/nginx/cert/uggedal.com.key":
+        content => "...",
+        mode => 600;
+    }

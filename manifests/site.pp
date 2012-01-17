@@ -6,12 +6,16 @@ define nginx::site($domain,
                    $mediaroot="",
                    $mediaprefix="",
                    $default_vhost=false,
+                   $autoindex=false,
                    $rewrite_missing_html_extension=false,
                    $upstreams=[],
                    $auth_basic=false,
                    $auth_basic_content="",
                    $directory_check=true,
-                   $aliases=[]) {
+                   $aliases=[],
+                   $ssl=false,
+                   $ssl_certificate="",
+                   $ssl_certificate_key="") {
   $absolute_mediaroot = inline_template("<%= File.expand_path(mediaroot, root) %>")
 
   if $ensure == 'present' {
