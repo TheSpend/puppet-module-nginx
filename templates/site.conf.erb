@@ -38,6 +38,15 @@ server {
   }
 <% end -%>
 
+<% if stub_status == true -%>
+  location /nginx_status {
+    stub_status on;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
+<% end -%>
+
   location / {
 <% if auth_basic -%>
     auth_basic            "Restricted";
@@ -51,15 +60,6 @@ server {
 <% if autoindex -%>
     autoindex on;
 <% end -%>
-<% end -%>
-
-<% if stub_status == true -%>
-  location /nginx_status {
-    stub_status on;
-    access_log   off;
-    allow 127.0.0.1;
-    deny all;
-  }
 <% end -%>
 
 <% if rewrite_missing_html_extension -%>
