@@ -53,6 +53,15 @@ server {
 <% end -%>
 <% end -%>
 
+<% if stub_status == true -%>
+  location /nginx_status {
+    stub_status on;
+    access_log   off;
+    allow 127.0.0.1;
+    deny all;
+  }
+<% end -%>
+
 <% if rewrite_missing_html_extension -%>
     try_files $uri $uri/ $uri.html =404;
 <% end -%>

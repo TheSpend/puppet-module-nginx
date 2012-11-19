@@ -13,6 +13,7 @@ define nginx::site($domain,
                    $auth_basic_content="",
                    $directory_check=true,
                    $aliases=[],
+                   $stub_status=false,
                    $ssl=false,
                    $ssl_certificate="",
                    $ssl_certificate_key="") {
