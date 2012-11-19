@@ -14,6 +14,7 @@ define nginx::site($domain,
                    $directory_check=true,
                    $aliases=[],
                    $stub_status=false,
+                   $stub_status_ip=false,
                    $ssl=false,
                    $ssl_certificate="",
                    $ssl_certificate_key="") {
