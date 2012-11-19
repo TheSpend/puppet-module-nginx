@@ -44,7 +44,7 @@ server {
     access_log off;
     allow 127.0.0.1;
     <% if stub_status_ip != false -%>
-      allow $stub_status_ip;
+      allow <%= "#{stub_status_ip};" %>
     <% end -%>
     deny all;
   }
